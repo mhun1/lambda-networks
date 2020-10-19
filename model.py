@@ -28,9 +28,10 @@ class UpLambda(nn.Module):
 
 
 class Lambda_Unet(nn.Module):
-    def __init__(self):
+    def __init__(self,n_classes):
         super(Lambda_Unet, self).__init__()
 
+        self.n_classes = n_classes
         self.max_pool = nn.MaxPool2d((2, 2))
         self.up_lambda = UpLambda(1024, 512, 7)
         self.up_lambda2 = UpLambda(512, 256, 7)
@@ -48,7 +49,7 @@ class Lambda_Unet(nn.Module):
         self.lambda_reverse3 = DoubleLambda(256, 128, 7)
 
         self.same_lambda = DoubleLambda(128, 64, 7)
-        self.output_lambda = LambdaLayer(dim=64, dim_out=2, r=7, dim_k=16, heads=2, dim_u=1)
+        self.output_lambda = LambdaLayer(dim=64, dim_out=self.n_classes, r=7, dim_k=16, heads=1, dim_u=1)
 
     def forward(self, x):
         print("INPUT SHAPE: {}".format(x.shape))
@@ -88,8 +89,5 @@ class Lambda_Unet(nn.Module):
         return x
 
 
-input = torch.randn(1, 1, 512, 512)
-lambda_unet = Lambda_Unet()
 
-output = lambda_unet(input)
 
