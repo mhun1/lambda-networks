@@ -24,7 +24,7 @@ def train(net,dataset,epochs=10,batch_size=10,lr=0.99,device="cpu"):
         for batch in train_loader:
             x = batch["image"].to(device=device)
             y = batch["ground_truth"].to(device=device)
-
+            
             pred = net(x)
             loss = criterion(pred,y)
             epoch_loss += loss.item()

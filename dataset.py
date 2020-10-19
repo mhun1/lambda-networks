@@ -61,11 +61,16 @@ class FluoDataset(Dataset):
         if not os.path.isfile(gt):
             return None
 
-        s_image = (Image.open(sample))
-        print(s_image.mode)
-        gt_image = np.array(Image.open(gt))
+        s_image = np.array(Image.open(sample)).astype(np.float32)
+        s_image = Image.fromarray(s_image*255)
+
+        gt_image = np.array(Image.open(gt)).astype(np.float32)
         gt_image = np.where(gt_image==0.0,gt_image,1)
-        gt_image = Image.fromarray(np.uint8(gt_image*255))
+        gt_image = Image.fromarray(gt_image*255)
+
+        print(s_image.mode)
+        print(gt_image.mode)
+
         out = {"image":s_image,"ground_truth":gt_image}
 
         seed = np.random.randint(2147483647)
@@ -84,8 +89,8 @@ class FluoDataset(Dataset):
 
         return out
 
-
-
+#tr_dataset = FluoDataset("/home/mhun/data/Fluo-N2DH-GOWT1/01/", "/home/mhun/data/Fluo-N2DH-GOWT1/01_GT/TRA/")
+#tr_dataset[0]
     # ax = plt.subplot(1, 2, 1)
     # x = sample["image"]
     # x_vis = x.permute(1, 2, 0)

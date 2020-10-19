@@ -50,6 +50,7 @@ class Lambda_Unet(nn.Module):
 
         self.same_lambda = DoubleLambda(128, 64, 7)
         self.output_lambda = LambdaLayer(dim=64, dim_out=self.n_classes, r=7, dim_k=16, heads=1, dim_u=1)
+        self.softmax = nn.Softmax()
 
     def forward(self, x):
         print("INPUT SHAPE: {}".format(x.shape))
@@ -86,7 +87,7 @@ class Lambda_Unet(nn.Module):
 
         x = self.output_lambda(x)  # (1,2,512,512)
 
-        return x
+        return self.softmax(x)
 
 
 
